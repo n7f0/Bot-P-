@@ -1,12 +1,11 @@
 FROM python:3.11-slim
 
-# Variáveis de ambiente para Python
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1
 
-# Dependências do sistema (necessárias para discord.py[voice] / PyNaCl)
+# Dependências do sistema
 RUN apt-get update && apt-get install -y --no-install-recommends \
         build-essential \
         libffi-dev \
@@ -14,24 +13,28 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libsodium-dev \
         ffmpeg \
         ca-certificates \
+        gosu \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-# Instala dependências Python primeiro (melhor cache de camadas)
+# Dependências Python primeiro (cache de camadas)
 COPY requirements.txt .
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
-# Copia o código do bot
+# Código
 COPY bot.py .
 COPY database.py .
 
-# Cria o diretório de dados persistentes
+# Entrypoint que corrige permissões do /app/data antes de rodar
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# Cria pasta de dados
 RUN mkdir -p /app/data
 
-# Usuário não-root (segurança)
-RUN useradd -m -u 1000 botuser && chown -R botuser:botuser /app
-USER botuser
+# Cria usuário não-root
+RUN useradd -m -u 1000 botuser
 
-# Comando de inicialização
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["python", "-u", "bot.py"]

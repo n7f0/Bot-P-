@@ -20,7 +20,12 @@ LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO").upper()
 logging.basicConfig(level=getattr(logging, LOG_LEVEL), format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-# Cores
+# ===================== IDENTIDADE 𝚙𝚡𝚔 =====================
+BRAND_NAME = "𝚙𝚡𝚔"
+BRAND_EMOJI = "🖤"
+BRAND_FOOTER = f"{BRAND_EMOJI} {BRAND_NAME} • Sistema Oficial"
+
+# Cores (paleta preto/roxo/neon para combinar com "𝚙𝚡𝚔")
 PINK = 0xFFB6C1
 CREAM = 0xFFF8DC
 BROWN = 0xD2B48C
@@ -28,6 +33,9 @@ ROSE = 0xFF69B4
 GREEN = 0x00FF00
 RED = 0xFF0000
 GOLD = 0xFFD700
+PXK_PURPLE = 0x8A2BE2
+PXK_BLACK = 0x1A1A1A
+PXK_NEON = 0xB026FF
 
 # URLs
 FOTO_PERFIL_URL = os.getenv("FOTO_PERFIL_URL", "https://cdn.discordapp.com/attachments/1530244163591733388/1530261464735158302/file_00000000f840820eb47ef8c8b417de1d.png?ex=6a64ee8c&is=6a639d0c&hm=d0a67e2ef95d93d3f3ed856d94933806fde1180d5063ef8ee40113b39d09a279&")
@@ -45,14 +53,14 @@ def load_config():
         "age_verification_enabled": False,
         "age_verified_role_id": None,
         "age_underage_role_id": None,
-        "age_kick_underage": True,   # Se True, expulsa menores; se False, dá cargo de menor
+        "age_kick_underage": True,
         "age_verification_channel_id": None,
         "age_unverified_role_id": None,
         "age_native_verification_role_id": None,
         "age_panel_channel_id": None,
         "age_panel_message_id": None,
         "welcome_channel_id": None,
-        "welcome_message": "Bem-vindo(a) ao cantinho da Nita! 🌸",
+        "welcome_message": f"Bem-vindo(a) ao servidor {BRAND_NAME}! {BRAND_EMOJI}",
         "welcome_image_url": BANNER_PAINEL_URL,
         "admin_role_ids": [],
         "voice_channel_id": None,
@@ -134,7 +142,7 @@ async def update_status():
             status=status,
             activity=discord.Activity(
                 type=discord.ActivityType.watching,
-                name=f"🌸 {guild.member_count} membros"
+                name=f"{BRAND_EMOJI} {guild.member_count} membros em {BRAND_NAME}"
             )
         )
 
@@ -159,12 +167,12 @@ async def log_moderation_action(action, moderator, target, reason=None):
         channel = moderator.guild.get_channel(channel_id)
         if channel:
             embed = discord.Embed(
-                title=f"🛡️ Ação de Moderação",
+                title=f"🛡️ Ação de Moderação — {BRAND_NAME}",
                 description=f"**Ação:** {action}\n**Moderador:** {moderator.mention}\n**Alvo:** {target.mention}\n**Motivo:** {reason or 'Não informado'}",
                 color=RED if "ban" in action.lower() or "kick" in action.lower() else GOLD,
                 timestamp=datetime.datetime.now()
             )
-            embed.set_footer(text=f"ID do alvo: {target.id}")
+            embed.set_footer(text=f"ID do alvo: {target.id} • {BRAND_NAME}")
             await channel.send(embed=embed)
 
 async def log_age_verification(user, approved, age=None, birth_date=None, underage_role_given=False, error_msg=None):
@@ -175,7 +183,7 @@ async def log_age_verification(user, approved, age=None, birth_date=None, undera
     if not channel:
         return
     embed = discord.Embed(
-        title="🔞 Verificação de Idade",
+        title=f"🔞 Verificação de Idade — {BRAND_NAME}",
         description=f"**Usuário:** {user.mention}\n**ID:** {user.id}\n**Resultado:** {'✅ Aprovado' if approved else '❌ Reprovado'}",
         color=GREEN if approved else RED,
         timestamp=datetime.datetime.now()
@@ -204,9 +212,9 @@ def calcular_idade(data_nasc):
 # ===================== EMBEDS =====================
 def embed_painel():
     e = discord.Embed(
-        title="🌸 Painel da Nita",
+        title=f"{BRAND_EMOJI} Painel Administrativo — {BRAND_NAME}",
         description=(
-            "**Bem-vinda(o) ao centro de configurações!**\n\n"
+            f"**Bem-vindo(a) ao centro de configurações do servidor {BRAND_NAME}!**\n\n"
             "✅ **Verificação** – Captcha e +18\n"
             "💌 **Boas‑vindas** – mensagem, imagem e canal\n"
             "🔊 **Voz** – canal 24h, mute e status\n"
@@ -216,53 +224,53 @@ def embed_painel():
             "💡 **Sugestões** – comunidade vota\n"
             "📅 **Eventos** – agendamento de mensagens\n"
             "⏰ **Lembretes** – agende datas e horas\n\n"
-            "Selecione uma opção no menu abaixo. 💖"
+            "Selecione uma opção no menu abaixo. 🖤💜"
         ),
-        color=PINK
+        color=PXK_PURPLE
     )
     e.set_thumbnail(url=FOTO_PERFIL_URL)
     e.set_image(url=BANNER_PAINEL_URL)
-    e.set_footer(text="🌸 Com amor, Nita", icon_url=FOTO_PERFIL_URL)
+    e.set_footer(text=BRAND_FOOTER, icon_url=FOTO_PERFIL_URL)
     return e
 
 def embed_ticket_painel():
     e = discord.Embed(
-        title="🎫 Central de Tickets",
+        title=f"🎫 Central de Tickets — {BRAND_NAME}",
         description=(
-            "**Olá, seja bem-vindo(a)!** 🌸\n\n"
+            f"**Olá, seja bem-vindo(a) ao {BRAND_NAME}!** {BRAND_EMOJI}\n\n"
             "Aqui você pode abrir um ticket para receber atendimento personalizado.\n"
             "Clique no botão correspondente:\n\n"
             "❓ **Dúvidas** – perguntas gerais\n"
             "🛒 **Compras** – vendas ou compras\n\n"
-            "Nossa equipe estará à disposição para te ajudar com carinho. 💖"
+            f"Nossa equipe do {BRAND_NAME} estará à disposição para te ajudar. 💜"
         ),
-        color=PINK
+        color=PXK_PURPLE
     )
     e.set_thumbnail(url=FOTO_PERFIL_URL)
     e.set_image(url=BANNER_TICKET_URL)
-    e.set_footer(text="🌸 Com amor, Nita", icon_url=FOTO_PERFIL_URL)
+    e.set_footer(text=BRAND_FOOTER, icon_url=FOTO_PERFIL_URL)
     return e
 
 def embed_sugestoes_painel():
     e = discord.Embed(
-        title="💡 Painel de Sugestões",
+        title=f"💡 Painel de Sugestões — {BRAND_NAME}",
         description=(
-            "**Queremos ouvir você!** 🌸\n\n"
+            f"**Queremos ouvir você!** {BRAND_EMOJI}\n\n"
             "Clique no botão abaixo e compartilhe sua ideia.\n\n"
-            "Todas as sugestões serão votadas pela comunidade. 💖"
+            "Todas as sugestões serão votadas pela comunidade. 💜"
         ),
-        color=PINK
+        color=PXK_PURPLE
     )
     e.set_thumbnail(url=FOTO_PERFIL_URL)
     e.set_image(url=BANNER_PAINEL_URL)
-    e.set_footer(text="🌸 Com amor, Nita", icon_url=FOTO_PERFIL_URL)
+    e.set_footer(text=BRAND_FOOTER, icon_url=FOTO_PERFIL_URL)
     return e
 
 def embed_verificacao_painel():
     e = discord.Embed(
-        title="✅ Verificação de Segurança",
+        title=f"✅ Verificação de Segurança — {BRAND_NAME}",
         description=(
-            "**Proteja sua conta e ganhe acesso total!** 🌸\n\n"
+            f"**Proteja sua conta e ganhe acesso total ao {BRAND_NAME}!** {BRAND_EMOJI}\n\n"
             "Clique no botão **'🔐 Verificar Agora'** abaixo para iniciar sua verificação.\n"
             "Responda corretamente ao desafio matemático para ganhar o cargo de **Verificado**.\n\n"
             "**Como funciona:**\n"
@@ -271,18 +279,18 @@ def embed_verificacao_painel():
             "• Clique em 'Verificar' e digite o resultado.\n"
             "• Se acertar, ganhará automaticamente o cargo.\n\n"
             "Caso já tenha o cargo, ignore esta mensagem.\n"
-            "Qualquer dúvida, abra um ticket. 💖"
+            "Qualquer dúvida, abra um ticket. 💜"
         ),
-        color=ROSE
+        color=PXK_NEON
     )
     e.set_thumbnail(url=FOTO_PERFIL_URL)
     e.set_image(url=BANNER_PAINEL_URL)
-    e.set_footer(text="🌸 Com amor, Nita", icon_url=FOTO_PERFIL_URL)
+    e.set_footer(text=BRAND_FOOTER, icon_url=FOTO_PERFIL_URL)
     return e
 
 # ===================== VIEWS =====================
 
-# ---------- PAINEL PRINCIPAL ----------
+# ---------- PAINEL PRINCIPAL (ADMIN) ----------
 class MainPanel(ui.View):
     def __init__(self):
         super().__init__(timeout=None)
@@ -303,7 +311,7 @@ class MainSelect(ui.Select):
             discord.SelectOption(label="📅 Eventos", value="events", emoji="📅"),
             discord.SelectOption(label="⏰ Lembretes", value="reminder", emoji="⏰"),
         ]
-        super().__init__(placeholder="Escolha uma configuração", options=options)
+        super().__init__(placeholder=f"🖤 Configurações do {BRAND_NAME}", options=options)
 
     async def callback(self, interaction: discord.Interaction):
         value = self.values[0]
@@ -519,6 +527,10 @@ class VoiceConfigView(ui.View):
     async def set_status(self, interaction, button):
         await interaction.response.send_message("Escolha o status do bot:", view=StatusSelectView(), ephemeral=True)
 
+    @ui.button(label="🎧 Canal de Voz 24h", style=discord.ButtonStyle.primary)
+    async def set_voice_channel(self, interaction, button):
+        await interaction.response.send_message("Escolha o canal de voz para o bot entrar:", view=VoiceChannelView(), ephemeral=True)
+
 class StatusSelectView(ui.View):
     def __init__(self):
         super().__init__(timeout=60)
@@ -550,7 +562,7 @@ class VerificationConfigView(ui.View):
     async def set_role(self, interaction, button):
         await interaction.response.send_message("Escolha o cargo que será dado após a verificação:", view=CaptchaRoleView(), ephemeral=True)
 
-    @ui.button(label="📢 Canal de Verificação (onde o captcha será enviado)", style=discord.ButtonStyle.primary)
+    @ui.button(label="📢 Canal de Verificação", style=discord.ButtonStyle.primary)
     async def set_verification_channel(self, interaction, button):
         await interaction.response.send_message("Escolha o canal onde os desafios de verificação serão enviados:", view=VerificationChannelView(), ephemeral=True)
 
@@ -719,12 +731,12 @@ class SuggestionModal(ui.Modal, title="💡 Enviar Sugestão"):
             return
 
         embed = discord.Embed(
-            title="💡 Nova Sugestão",
+            title=f"💡 Nova Sugestão — {BRAND_NAME}",
             description=self.sugestao.value,
-            color=PINK
+            color=PXK_PURPLE
         )
         embed.set_author(name=interaction.user.display_name, icon_url=interaction.user.display_avatar.url)
-        embed.set_footer(text=f"ID: {interaction.user.id}")
+        embed.set_footer(text=f"ID: {interaction.user.id} • {BRAND_NAME}")
         msg = await channel.send(embed=embed)
         await msg.add_reaction("👍")
         await msg.add_reaction("👎")
@@ -967,7 +979,7 @@ class AdminRoleSelect(ui.Select):
                     opts.append(discord.SelectOption(label=r.name, value=str(r.id)))
         if not opts:
             opts = [discord.SelectOption(label="Nenhum cargo disponível", value="none")]
-        super().__init__(placeholder="Selecione cargos (múltiplos)", options=opts[:25], min_values=0, max_values=len(opts))
+        super().__init__(placeholder="Selecione cargos (múltiplos)", options=opts[:25], min_values=0, max_values=min(len(opts), 25))
 
     async def callback(self, interaction):
         vals = self.values
@@ -1035,7 +1047,7 @@ class TicketConfigView(ui.View):
     async def logs(self, interaction, button):
         await interaction.response.send_message("Escolha o canal de logs:", view=TicketLogsChannelView(), ephemeral=True)
 
-    @ui.button(label="📢 Canal do Painel de Tickets", style=discord.ButtonStyle.primary)
+    @ui.button(label="📢 Canal do Painel", style=discord.ButtonStyle.primary)
     async def panel_channel(self, interaction, button):
         await interaction.response.send_message("Escolha o canal do painel de tickets:", view=TicketPanelChannelView(), ephemeral=True)
 
@@ -1119,7 +1131,7 @@ class TicketSupportRolesSelect(ui.Select):
                     opts.append(discord.SelectOption(label=r.name, value=str(r.id)))
         if not opts:
             opts = [discord.SelectOption(label="Nenhum cargo disponível", value="none")]
-        super().__init__(placeholder="Selecione cargos de suporte", options=opts[:25], min_values=0, max_values=len(opts))
+        super().__init__(placeholder="Selecione cargos de suporte", options=opts[:25], min_values=0, max_values=min(len(opts), 25))
 
     async def callback(self, interaction):
         vals = self.values
@@ -1246,7 +1258,7 @@ class TicketRatingModal(ui.Modal, title="⭐ Avalie o Atendimento"):
             channel = interaction.guild.get_channel(feedback_channel_id)
             if channel:
                 embed = discord.Embed(
-                    title="⭐ Nova Avaliação de Ticket",
+                    title=f"⭐ Nova Avaliação de Ticket — {BRAND_NAME}",
                     description=f"**Usuário:** {interaction.user.mention}\n**Ticket:** {self.ticket_name}\n**Nota:** {'⭐' * rating} ({rating}/5)\n**Comentário:** {comment}",
                     color=GOLD,
                     timestamp=datetime.datetime.now()
@@ -1310,10 +1322,10 @@ class TicketPanelView(ui.View):
         add_open_ticket(interaction.user.id, channel.id)
 
         embed = discord.Embed(
-            title=f"🌸 Ticket de {nome}",
+            title=f"{BRAND_EMOJI} Ticket de {nome} — {BRAND_NAME}",
             description=(
-                f"**Olá {interaction.user.mention}!** Seja muito bem-vindo(a) ao nosso atendimento personalizado. 💖\n\n"
-                "Agradecemos por entrar em contato conosco. Nossa equipe está pronta para te ajudar com todo carinho.\n\n"
+                f"**Olá {interaction.user.mention}!** Seja muito bem-vindo(a) ao nosso atendimento. 💜\n\n"
+                "Agradecemos por entrar em contato conosco. Nossa equipe está pronta para te ajudar.\n\n"
                 "**📌 Como funciona:**\n"
                 "• Descreva sua dúvida ou pedido detalhadamente abaixo.\n"
                 "• Você pode enviar arquivos, imagens ou links para facilitar.\n"
@@ -1321,12 +1333,12 @@ class TicketPanelView(ui.View):
                 "**💡 Dicas:**\n"
                 "• Seja claro e objetivo para agilizar o atendimento.\n"
                 "• Fique atento às notificações deste canal.\n\n"
-                "Aguarde um momento, por favor. Estamos aqui para você! 🌸"
+                "Aguarde um momento, por favor. Estamos aqui para você! 🖤"
             ),
-            color=PINK
+            color=PXK_PURPLE
         )
         embed.set_image(url=BANNER_TICKET_URL)
-        embed.set_footer(text="🌸 Equipe Nita", icon_url=FOTO_PERFIL_URL)
+        embed.set_footer(text=f"{BRAND_EMOJI} Equipe {BRAND_NAME}", icon_url=FOTO_PERFIL_URL)
         await channel.send(embed=embed)
 
         if support_mentions:
@@ -1339,7 +1351,7 @@ class TicketPanelView(ui.View):
             log_ch = guild.get_channel(log_channel_id)
             if log_ch:
                 log_embed = discord.Embed(
-                    title="📩 Novo Ticket",
+                    title=f"📩 Novo Ticket — {BRAND_NAME}",
                     description=f"**Tipo:** {nome}\n**Usuário:** {interaction.user.mention}\n**Canal:** {channel.mention}",
                     color=CREAM,
                     timestamp=datetime.datetime.now()
@@ -1348,8 +1360,8 @@ class TicketPanelView(ui.View):
 
         embed_resp = discord.Embed(
             title="✅ Ticket criado com sucesso!",
-            description=f"🌸 Seu ticket de **{nome}** foi aberto em {channel.mention}.\nAguarde o atendimento.",
-            color=PINK
+            description=f"{BRAND_EMOJI} Seu ticket de **{nome}** foi aberto em {channel.mention}.\nAguarde o atendimento.",
+            color=PXK_PURPLE
         )
         await interaction.response.send_message(embed=embed_resp, ephemeral=True)
 
@@ -1394,10 +1406,9 @@ class AgeVerificationModal(ui.Modal, title="🔞 Verificação de Idade"):
         adult_role_id = config.get("age_verified_role_id")
         underage_role_id = config.get("age_underage_role_id")
         unverified_role_id = config.get("age_unverified_role_id")
-        kick_underage = config.get("age_kick_underage", True)  # True = expulsar, False = dar cargo
+        kick_underage = config.get("age_kick_underage", True)
 
         if idade >= 18:
-            # MAIOR DE IDADE
             if adult_role_id:
                 role = guild.get_role(adult_role_id)
                 if role:
@@ -1411,16 +1422,16 @@ class AgeVerificationModal(ui.Modal, title="🔞 Verificação de Idade"):
                 if role:
                     await member.remove_roles(role)
 
-            await interaction.response.send_message("✅ **Verificação concluída!** Você ganhou acesso ao servidor. 🌸", ephemeral=True)
+            await interaction.response.send_message("✅ **Verificação concluída!** Você ganhou acesso ao servidor. 🖤", ephemeral=True)
 
             welcome_channel_id = config.get("welcome_channel_id")
             if welcome_channel_id:
                 channel = guild.get_channel(welcome_channel_id)
                 if channel:
                     embed = discord.Embed(
-                        title=f"🌸 Bem-vindo(a) ao servidor, {member.mention}!",
-                        description=config.get("welcome_message", "Bem-vindo(a)! 💖"),
-                        color=PINK
+                        title=f"{BRAND_EMOJI} Bem-vindo(a) ao {BRAND_NAME}, {member.mention}!",
+                        description=config.get("welcome_message", "Bem-vindo(a)! 💜"),
+                        color=PXK_PURPLE
                     )
                     img = config.get("welcome_image_url", BANNER_PAINEL_URL)
                     if img:
@@ -1430,15 +1441,12 @@ class AgeVerificationModal(ui.Modal, title="🔞 Verificação de Idade"):
             await log_age_verification(member, True, idade, self.nascimento.value)
 
         else:
-            # MENOR DE IDADE
             if kick_underage:
-                # Tenta expulsar
                 try:
-                    await guild.kick(member, reason=f"Idade insuficiente ({idade} anos) – verificação +18")
+                    await guild.kick(member, reason=f"Idade insuficiente ({idade} anos) – verificação +18 em {BRAND_NAME}")
                     await interaction.response.send_message("❌ Você foi expulso por ter menos de 18 anos.", ephemeral=True)
                     await log_age_verification(member, False, idade, self.nascimento.value, underage_role_given=False)
                 except discord.Forbidden:
-                    # Se não tiver permissão, dá o cargo de menor
                     error_msg = "Bot sem permissão para expulsar. Atribuído cargo de menor."
                     await interaction.response.send_message(
                         f"⚠️ Não foi possível expulsar você devido a uma configuração do servidor. "
@@ -1459,7 +1467,6 @@ class AgeVerificationModal(ui.Modal, title="🔞 Verificação de Idade"):
                             await member.remove_roles(role)
                     await log_age_verification(member, False, idade, self.nascimento.value, underage_role_given=True, error_msg=error_msg)
             else:
-                # Não expulsa, apenas dá o cargo de menor
                 if underage_role_id:
                     role = guild.get_role(underage_role_id)
                     if role:
@@ -1549,18 +1556,18 @@ async def iniciar_verificacao_idade(member: discord.Member, channel: discord.Tex
             return
 
     embed = discord.Embed(
-        title="🔞 Verificação de Idade Obrigatória",
+        title=f"🔞 Verificação de Idade — {BRAND_NAME}",
         description=(
-            f"Olá {member.mention}! Para completar sua entrada, você precisa confirmar que tem **18 anos ou mais**.\n"
+            f"Olá {member.mention}! Para completar sua entrada no {BRAND_NAME}, você precisa confirmar que tem **18 anos ou mais**.\n"
             "Clique no botão abaixo e informe sua data de nascimento.\n\n"
             "**Atenção:**\n"
             "• Usuários com menos de 18 anos serão removidos automaticamente.\n"
             "• A informação é confidencial e usada apenas para esta verificação."
         ),
-        color=ROSE
+        color=PXK_NEON
     )
     embed.set_image(url=BANNER_PAINEL_URL)
-    embed.set_footer(text="🌸 Com amor, Nita", icon_url=FOTO_PERFIL_URL)
+    embed.set_footer(text=BRAND_FOOTER, icon_url=FOTO_PERFIL_URL)
     await channel.send(embed=embed, view=AgeVerificationView(member))
 
 # ---------- BOTÃO DE VERIFICAÇÃO (PAINEL) ----------
@@ -1585,14 +1592,14 @@ class VerificationButton(ui.View):
                 f"**{num1} + {num2} = ?**\n\n"
                 "Clique no botão abaixo para responder."
             ),
-            color=ROSE
+            color=PXK_NEON
         )
         view = CaptchaView(member, answer, guild.id, channel.id)
         await channel.send(embed=embed, view=view)
         await interaction.response.send_message("✅ Desafio enviado! Resolva a operação acima.", ephemeral=True)
 
 # ---------- EVENTOS ----------
-class EventModal(ui.Modal, title="📅 Agendar Evento"):
+class EventModal(ui.Modal, title=f"📅 Agendar Evento — {BRAND_NAME}"):
     mensagem = ui.TextInput(label="Mensagem", style=discord.TextStyle.paragraph, required=True)
     canal_id = ui.TextInput(label="ID do Canal", required=True)
     data = ui.TextInput(label="Data (AAAA-MM-DD)", required=True)
@@ -1630,7 +1637,7 @@ class EventModal(ui.Modal, title="📅 Agendar Evento"):
         await interaction.response.send_message(f"✅ Evento agendado para {dt.strftime('%d/%m/%Y %H:%M')} no canal <#{channel_id}>.", ephemeral=True)
 
 # ---------- LEMBRETES ----------
-class ReminderModal(ui.Modal, title="🌸 Lembrete"):
+class ReminderModal(ui.Modal, title=f"{BRAND_EMOJI} Lembrete — {BRAND_NAME}"):
     msg = ui.TextInput(label="Mensagem", style=discord.TextStyle.paragraph, required=True)
     data = ui.TextInput(label="Data (AAAA-MM-DD)", required=True)
     hora = ui.TextInput(label="Hora (HH:MM)", required=True)
@@ -1650,39 +1657,43 @@ class ReminderModal(ui.Modal, title="🌸 Lembrete"):
 
 # ===================== COMANDOS =====================
 
-@bot.tree.command(name="painel", description="🌸 Envia/atualiza o painel principal")
+@bot.tree.command(name="painelpxkadmin", description=f"{BRAND_EMOJI} Painel administrativo do servidor {BRAND_NAME}")
 @app_commands.default_permissions(administrator=True)
-async def cmd_painel(interaction):
+async def cmd_painel_pxk_admin(interaction: discord.Interaction):
+    """Envia o painel administrativo principal do 𝚙𝚡𝚔."""
     cid = config.get("painel_channel_id")
-    if not cid:
-        await interaction.response.send_message("❌ Configure o canal primeiro no menu '📌 Painel Fixo'.", ephemeral=True)
-        return
-    channel = interaction.guild.get_channel(cid)
-    if not channel:
-        await interaction.response.send_message("❌ Canal inválido.", ephemeral=True)
-        return
+    if cid:
+        channel = interaction.guild.get_channel(cid)
+        if channel:
+            msg_id = config.get("painel_message_id")
+            if msg_id:
+                try:
+                    msg = await channel.fetch_message(msg_id)
+                    await msg.edit(embed=embed_painel(), view=MainPanel())
+                    await interaction.response.send_message(
+                        f"✅ Painel do **{BRAND_NAME}** atualizado em {channel.mention}",
+                        ephemeral=True
+                    )
+                    return
+                except:
+                    pass
 
-    msg_id = config.get("painel_message_id")
-    if msg_id:
-        try:
-            msg = await channel.fetch_message(msg_id)
-            await msg.edit(embed=embed_painel(), view=MainPanel())
-            await interaction.response.send_message(f"✅ Painel principal atualizado em {channel.mention}", ephemeral=True)
-            return
-        except:
-            pass
-
-    msg = await channel.send(embed=embed_painel(), view=MainPanel())
+    # Se não houver canal configurado ou mensagem antiga, envia no canal atual
+    msg = await interaction.channel.send(embed=embed_painel(), view=MainPanel())
+    config["painel_channel_id"] = interaction.channel.id
     config["painel_message_id"] = msg.id
     save_config(config)
-    await interaction.response.send_message(f"✅ Painel principal enviado em {channel.mention}", ephemeral=True)
+    await interaction.response.send_message(
+        f"✅ Painel administrativo do **{BRAND_NAME}** enviado neste canal!",
+        ephemeral=True
+    )
 
-@bot.tree.command(name="painelticket", description="🌸 Envia/atualiza o painel de tickets")
+@bot.tree.command(name="painelticket", description=f"{BRAND_EMOJI} Envia/atualiza o painel de tickets")
 @app_commands.default_permissions(administrator=True)
 async def cmd_painelticket(interaction):
     cid = config.get("ticket_panel_channel_id")
     if not cid:
-        await interaction.response.send_message("❌ Configure o canal em 'Tickets > Canal do Painel de Tickets'.", ephemeral=True)
+        await interaction.response.send_message("❌ Configure o canal em `Tickets > Canal do Painel`.", ephemeral=True)
         return
     channel = interaction.guild.get_channel(cid)
     if not channel:
@@ -1692,12 +1703,12 @@ async def cmd_painelticket(interaction):
     await channel.send(embed=embed_ticket_painel(), view=TicketPanelView())
     await interaction.response.send_message(f"✅ Painel de tickets enviado em {channel.mention}", ephemeral=True)
 
-@bot.tree.command(name="painelsugestoes", description="💡 Envia/atualiza o painel de sugestões")
+@bot.tree.command(name="painelsugestoes", description=f"💡 Envia/atualiza o painel de sugestões do {BRAND_NAME}")
 @app_commands.default_permissions(administrator=True)
 async def cmd_painelsugestoes(interaction):
     cid = config.get("suggestions_panel_channel_id")
     if not cid:
-        await interaction.response.send_message("❌ Configure o canal em 'Sugestões > Canal do Painel'.", ephemeral=True)
+        await interaction.response.send_message("❌ Configure o canal em `Sugestões > Canal do Painel`.", ephemeral=True)
         return
     channel = interaction.guild.get_channel(cid)
     if not channel:
@@ -1709,12 +1720,12 @@ async def cmd_painelsugestoes(interaction):
     save_config(config)
     await interaction.response.send_message(f"✅ Painel de sugestões enviado em {channel.mention}", ephemeral=True)
 
-@bot.tree.command(name="painelverificacao", description="✅ Envia/atualiza o painel informativo com botão de verificação")
+@bot.tree.command(name="painelverificacao", description="✅ Envia/atualiza o painel de verificação")
 @app_commands.default_permissions(administrator=True)
 async def cmd_painelverificacao(interaction):
     cid = config.get("verification_panel_channel_id")
     if not cid:
-        await interaction.response.send_message("❌ Configure o canal em 'Verificação Captcha > Canal do Painel de Verificação'.", ephemeral=True)
+        await interaction.response.send_message("❌ Configure o canal em `Verificação > Canal do Painel`.", ephemeral=True)
         return
     channel = interaction.guild.get_channel(cid)
     if not channel:
@@ -1731,7 +1742,7 @@ async def cmd_painelverificacao(interaction):
 async def cmd_painelidade(interaction: discord.Interaction):
     cid = config.get("age_panel_channel_id")
     if not cid:
-        await interaction.response.send_message("❌ Configure o canal em 'Verificação +18 > Canal do Painel de Idade'.", ephemeral=True)
+        await interaction.response.send_message("❌ Configure o canal em `Verificação +18 > Canal do Painel`.", ephemeral=True)
         return
     channel = interaction.guild.get_channel(cid)
     if not channel:
@@ -1739,9 +1750,9 @@ async def cmd_painelidade(interaction: discord.Interaction):
         return
 
     embed = discord.Embed(
-        title="🔞 Verificação de Idade",
+        title=f"🔞 Verificação de Idade — {BRAND_NAME}",
         description=(
-            "**Este servidor é +18!** 🌸\n\n"
+            f"**Este servidor é +18!** {BRAND_EMOJI}\n\n"
             "Para acessar todas as áreas, você precisa verificar sua idade.\n"
             "Clique no botão abaixo e informe sua data de nascimento.\n\n"
             "**Atenção:**\n"
@@ -1749,11 +1760,11 @@ async def cmd_painelidade(interaction: discord.Interaction):
             "• A informação é confidencial e usada apenas para esta verificação.\n"
             "• Se você já tiver o cargo +18, ignore esta mensagem."
         ),
-        color=ROSE
+        color=PXK_NEON
     )
     embed.set_thumbnail(url=FOTO_PERFIL_URL)
     embed.set_image(url=BANNER_PAINEL_URL)
-    embed.set_footer(text="🌸 Com amor, Nita", icon_url=FOTO_PERFIL_URL)
+    embed.set_footer(text=BRAND_FOOTER, icon_url=FOTO_PERFIL_URL)
 
     msg = await channel.send(embed=embed, view=AgeVerificationPanelView())
     config["age_panel_message_id"] = msg.id
@@ -1779,13 +1790,6 @@ async def cmd_reverificar(interaction: discord.Interaction, membro: discord.Memb
         if role:
             await membro.add_roles(role)
     verification_channel_id = config.get("age_verification_channel_id")
-    if verification_channel_id:
-        channel = interaction.guild.get_channel(verification_channel_id)
-        if channel:
-            try:
-                await membro.move_to(channel)
-            except:
-                pass
     if verification_channel_id:
         channel = interaction.guild.get_channel(verification_channel_id)
         if channel:
@@ -1839,7 +1843,7 @@ async def cmd_status(interaction, modo: str):
     await update_status()
     await interaction.response.send_message(f"✅ Status alterado para **{modo}**", ephemeral=True)
 
-@bot.tree.command(name="lembrete", description="🌸 Agende um lembrete")
+@bot.tree.command(name="lembrete", description=f"{BRAND_EMOJI} Agende um lembrete")
 async def cmd_lembrete(interaction, mensagem: str, data: str, hora: str):
     try:
         dt = datetime.datetime.strptime(f"{data} {hora}", "%Y-%m-%d %H:%M")
@@ -1857,7 +1861,7 @@ async def cmd_lembrete(interaction, mensagem: str, data: str, hora: str):
 
 @bot.event
 async def on_ready():
-    logger.info(f"🌸 Bot conectado como {bot.user}")
+    logger.info(f"{BRAND_EMOJI} Bot {BRAND_NAME} conectado como {bot.user}")
     init_db()
     try:
         async with aiohttp.ClientSession() as session:
@@ -1920,9 +1924,9 @@ async def on_member_join(member):
                             channel = guild.get_channel(welcome_channel_id)
                             if channel:
                                 embed = discord.Embed(
-                                    title=f"🌸 Bem-vindo(a) ao servidor, {member.mention}!",
-                                    description=config.get("welcome_message", "Bem-vindo(a)! 💖"),
-                                    color=PINK
+                                    title=f"{BRAND_EMOJI} Bem-vindo(a) ao {BRAND_NAME}, {member.mention}!",
+                                    description=config.get("welcome_message", "Bem-vindo(a)! 💜"),
+                                    color=PXK_PURPLE
                                 )
                                 img = config.get("welcome_image_url", BANNER_PAINEL_URL)
                                 if img:
@@ -1945,22 +1949,17 @@ async def on_member_join(member):
         if verification_channel_id:
             channel = guild.get_channel(verification_channel_id)
             if channel:
-                try:
-                    await member.move_to(channel)
-                except:
-                    pass
-
                 num1 = random.randint(1, 10)
                 num2 = random.randint(1, 10)
                 answer = num1 + num2
                 embed = discord.Embed(
                     title=f"🔐 Verificação para {member.display_name}",
                     description=(
-                        f"Olá {member.mention}! Para iniciar sua entrada, resolva a operação abaixo:\n\n"
+                        f"Olá {member.mention}! Para iniciar sua entrada no **{BRAND_NAME}**, resolva a operação abaixo:\n\n"
                         f"**{num1} + {num2} = ?**\n\n"
                         "Após acertar, você será solicitado a verificar sua idade."
                     ),
-                    color=ROSE
+                    color=PXK_NEON
                 )
                 view = CaptchaView(member, answer, guild.id, channel.id)
                 await channel.send(embed=embed, view=view)
@@ -1975,10 +1974,10 @@ async def on_member_join(member):
             embed = discord.Embed(
                 title=f"🔐 Verificação para {member.display_name}",
                 description=(
-                    f"Olá {member.mention}! Resolva a operação abaixo para ganhar acesso.\n\n"
+                    f"Olá {member.mention}! Resolva a operação abaixo para ganhar acesso ao **{BRAND_NAME}**.\n\n"
                     f"**{num1} + {num2} = ?**"
                 ),
-                color=ROSE
+                color=PXK_NEON
             )
             view = CaptchaView(member, answer, guild.id, channel.id)
             await channel.send(embed=embed, view=view)
@@ -1994,7 +1993,7 @@ async def on_member_remove(member):
 @bot.event
 async def on_guild_join(guild):
     config["guild_id"] = guild.id
-    save_config(guild)
+    save_config(config)
     me = guild.me
     if not me.guild_permissions.kick_members:
         logger.warning(f"⚠️ O bot NÃO tem permissão para expulsar membros no servidor {guild.name}! A verificação +18 atribuirá cargo de menor.")
@@ -2016,7 +2015,7 @@ async def check_reminders():
             user = bot.get_user(rem["user_id"])
             if user:
                 try:
-                    await user.send(f"⏰ **Lembrete**: {rem['message']}")
+                    await user.send(f"⏰ **Lembrete {BRAND_NAME}**: {rem['message']}")
                 except:
                     pass
             to_remove.append(i)

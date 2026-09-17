@@ -1,6 +1,14 @@
-FROM python:3.10-slim
-WORKDIR /app
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-COPY bot.py database.py .
-CMD ["python", "bot.py"]
+version: '3.8'
+services:
+  discord-bot:
+    build: .
+    container_name: pxk-bot
+    restart: unless-stopped
+    environment:
+      - DISCORD_TOKEN=${DISCORD_TOKEN}
+      - LOG_LEVEL=INFO
+      - FOTO_PERFIL_URL=${FOTO_PERFIL_URL}
+      - BANNER_PAINEL_URL=${BANNER_PAINEL_URL}
+      - BANNER_TICKET_URL=${BANNER_TICKET_URL}
+    volumes:
+      - ./data:/app/data

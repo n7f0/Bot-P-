@@ -2,13 +2,9 @@ version: '3.8'
 services:
   discord-bot:
     build: .
-    container_name: discord-bot
+    container_name: pxk-bot
     restart: unless-stopped
     environment:
       - DISCORD_TOKEN=${DISCORD_TOKEN}
-      - LOG_LEVEL=INFO
-      - FOTO_PERFIL_URL=${FOTO_PERFIL_URL}
-      - BANNER_PAINEL_URL=${BANNER_PAINEL_URL}
-      - BANNER_TICKET_URL=${BANNER_TICKET_URL}
     volumes:
       - ./data:/app/data
